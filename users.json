@@ -1,56 +1,27 @@
 [
   {
-    "username": "Kalle",
-    "lastname": "Svensson",
-    "password": "861012",
-    "id": "1"
-  },
-  {
-    "username": "myek",
-    "firstname": "my",
-    "lastname": "ek",
-    "email": "my.ek@gmail.com",
-    "password": "U2FsdGVkX1/5o47iCyH5q2MPE3N8T7jvEgGTa8i90Uw=",
-    "id": "24186"
-  },
-  {
-    "username": "bberg",
-    "firstname": "bo",
-    "lastname": "berg",
-    "email": "boberg@gmail.com",
-    "password": "U2FsdGVkX1/wffQcYeAJ+7+4fEZxPJZlBUp2XPSZh+U=",
-    "id": "22651"
-  },
-  {
-    "username": "bberg",
-    "firstname": "bo",
-    "lastname": "berg",
-    "email": "boberg@gmail.com",
-    "password": "U2FsdGVkX1/AfC9Ua6MdlshgNMC5tqbzsxhWkzyvWH4=",
-    "id": "89978"
-  },
-  {
-    "username": "lenab",
-    "firstname": "lena",
-    "lastname": "had",
-    "email": "lena@gmail.com",
-    "password": "U2FsdGVkX189vRdbVlD4PZVorLYhU3JnArWiyWCtwSI=",
-    "id": "33486"
-  },
-  {
-    "username": "asfa",
-    "firstname": "ag",
-    "lastname": "adg",
-    "email": "ja@gmail.com",
-    "password": "U2FsdGVkX19NxaU7db8nr0xABjERlexBEOMEz+ves4o=",
-    "id": "16509"
-  },
-  {
     "username": "userb",
     "firstname": "b",
     "lastname": "bb",
     "email": "bb@gmail.com",
     "password": "U2FsdGVkX1+Fy6qLZEwdqAUZab8x9XjOpn8aRjJ8yls=",
     "id": "69539"
+  },
+  {
+    "username": "m",
+    "firstname": "m",
+    "lastname": "m",
+    "email": "m@m.com",
+    "password": "U2FsdGVkX1+esiHCX3wnKo2NewedOPdVIT8w4k6aVOM=",
+    "id": "10610"
+  },
+  {
+    "username": "t",
+    "firstname": "t",
+    "lastname": "t",
+    "email": "t@t.com",
+    "password": "U2FsdGVkX18dL2iPqFRFDEnOBfSDXamYP2sob7MPUDs=",
+    "id": "65202",
+    "subscribe": true
   }
 ]
