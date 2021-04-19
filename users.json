@@ -22,6 +22,42 @@
     "email": "t@t.com",
     "password": "U2FsdGVkX18dL2iPqFRFDEnOBfSDXamYP2sob7MPUDs=",
     "id": "65202",
+    "subscribe": false
+  },
+  {
+    "username": "a",
+    "firstname": "a",
+    "lastname": "a",
+    "email": "a@aa.com",
+    "password": "U2FsdGVkX1+VJlbANhjsnnDoSdu74PgK+K345pL6g4E=",
+    "id": "13983148",
+    "subscribe": false
+  },
+  {
+    "username": "v",
+    "firstname": "v",
+    "lastname": "v",
+    "email": "v@v.com",
+    "password": "U2FsdGVkX1+H+1TY0jC1pybVv0zrLlB2McICQyVCPzY=",
+    "id": "55920020",
     "subscribe": true
+  },
+  {
+    "username": "q",
+    "firstname": "q",
+    "lastname": "q",
+    "email": "q@q.com",
+    "password": "U2FsdGVkX19+ErCWHccbUbb0y82gHFdANAfGxBI4J7w=",
+    "id": "81748324",
+    "subscribe": false
+  },
+  {
+    "username": "t",
+    "firstname": "t",
+    "lastname": "t",
+    "email": "rebecka.alsterlind@gmail.com",
+    "password": "U2FsdGVkX1/M3UD+22MSQJELfJQv3nqkXgsv+NxdXyM=",
+    "id": "08341380",
+    "subscribe": false
   }
 ]
