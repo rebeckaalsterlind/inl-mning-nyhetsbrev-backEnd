@@ -8,6 +8,17 @@ var usersRouter = require('./routes/users');
 var adminRouter = require('./routes/admin');
 var app = express();
 
+const MongoClient = require("mongodb").MongoClient;
+
+MongoClient.connect("mongodb+srv://alsterlind:8504143201@cluster0.bbnsj.mongodb.net/newsletter?retryWrites=true&w=majority", {
+    useUnifiedTopology: true
+})
+.then(client => {
+    console.log("Vi är uppkopplade mot databasen");
+    const db = client.db("newsletter");
+    app.locals.db = db; 
+});
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

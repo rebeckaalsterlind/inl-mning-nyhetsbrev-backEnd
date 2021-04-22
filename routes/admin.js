@@ -24,8 +24,8 @@ router.post("/", (req, res) => {
 
     if(foundAdmin.password === req.body.password) {
         
-        
         fs.readFile("users.json", (err, data) => {
+
             let printUsers = `<div><h2>All members</h2>`
             if(err) console.log(err);
             let users = JSON.parse(data);
@@ -33,10 +33,11 @@ router.post("/", (req, res) => {
             for (let user in users) {
                 printUsers += `
                 <div>
+                <p>Username: ${users[user].username}</p> 
                 <p>Name: ${users[user].firstname} ${users[user].lastname}</p> 
-                <p>Account number: ${users[user].username}</p> 
                 <p>Email: ${users[user].email}</p> 
-                <p>subscribing: ${users[user].subscribe}</p> 
+                <p>Newsletter: ${(users[user].subscribe) ? "subscribing" : "not subscribing"}</p> 
+                
                 </div><br /><br />`;
             };    
             

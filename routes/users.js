@@ -4,151 +4,141 @@ const fs = require("fs");
 const cors = require("cors");
 router.use(cors());
 const rand = require("random-key");
-var CryptoJS = require("crypto-js");
-
+const CryptoJS = require("crypto-js");
+//const ObjectID = require('mongodb').ObjectID;
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
 
+
+
+
 //CHECK INCOMING LOGIN 
 router.post("/login", (req, res) => {
-
-  fs.readFile("users.json", (err, data) => {
-    if(err) console.log(err);
+  let foundUser = req.body.username;
+console.log('foundUser', foundUser);
+  req.app.locals.db.collection("users").find({"username": foundUser}).toArray()
+  .then(result => {
+    console.log('[0', result[0].username);
     
-    let users = JSON.parse(data);
-    let foundUser = users.find(({username}) => username == req.body.username);
-    let originalPass = CryptoJS.AES.decrypt(foundUser.password, "nyckel").toString(CryptoJS.enc.Utf8);
-    console.log('originalpass', originalPass);
-    const currentUser = {username: foundUser.username, id: foundUser.id};
-    if(foundUser){
-       if(originalPass == req.body.password) {
-      res.json(currentUser);
-    }
-   
+    if(result[0]){
+      let originalPass = CryptoJS.AES.decrypt(result[0].password, "nyckel").toString(CryptoJS.enc.Utf8);
+     
+      if(originalPass == req.body.password) { 
+        const currentUser = {username: result[0].username, id: result[0]._id};
+        res.json(currentUser);
+      }
+
     }else {
-      console.log("else")
-     // res.json("användare eller lösen stämmer inte");
+      res.json("användare eller lösen stämmer inte");
     };
 
   });
 
 });
+
+
 
 //CREATE NEW USER
 router.post("/createAccount", (req, res) => {
   
   let randomId = rand.generateDigits(8);
-  
-  if(req.body.subscribe) {
-    fs.readFile("newsletter.json", (err, data) => {
-      if(err) console.log(err);
-      
-      let newsletter = JSON.parse(data); 
-      
-      newsletter.push(req.body.email);
+  let findUser = req.body.username;
 
-      fs.writeFile("newsletter.json", JSON.stringify(newsletter, null, 2), (err) => {
-        if(err) console.log(err);
-      });
-  
-    });
-  }
-
-  fs.readFile("users.json", (err, data) => {
-    if(err) console.log(err);
-    let users = JSON.parse(data);
-
-    let cryptPass = CryptoJS.AES.encrypt(req.body.password, "nyckel").toString();
-
-    let user = {
-      username: req.body.username,
-      firstname: req.body.firstname, 
-      lastname: req.body.lastname, 
-      email: req.body.email,
-      password: cryptPass,
-      id: randomId,
-      subscribe: req.body.subscribe
-    };
-  
-    users.push(user);
-
-    fs.writeFile("users.json", JSON.stringify(users, null, 2), (err) => {
-      if(err) console.log(err);
-    });
-  
+  req.app.locals.db.collection("users").find({"username": findUser}).toArray()
+  .then(result => {
+    console.log("result", result[0]) 
  
-  });
-  let currentUser = {username: req.body.username, id: randomId}
-  res.json(currentUser);
+    if(result[0] == undefined){
+      console.log("sub", req.body.subscribe)
+      if(req.body.subscribe) {
+        req.app.locals.db.collection("newsletter").insertOne({"email": req.body.email})
+      }
 
+
+      let cryptPass = CryptoJS.AES.encrypt(req.body.password, "nyckel").toString();
+
+      let user = {
+        "username": req.body.username,
+        "firstname": req.body.firstname, 
+        "lastname": req.body.lastname, 
+        "email": req.body.email,
+        "password": cryptPass,
+        "subscribe": req.body.subscribe
+      };
+      console.log('user', user);
+      req.app.locals.db.collection("users").insertOne(user)
+      req.app.locals.db.collection("users").find({"username": req.body.username}).toArray()
+        .then(getId => {
+        console.log("i", getId[0]._id)
+        let currentUser = {username: req.body.username, id: getId[0]._id}
+        res.json(currentUser);
+      });  
+
+    };  
+  });
 });
+
 
 
 //SEND USERS DETAILS FOR PRINT
 router.post('/myAccount/', function(req, res, next) {
 
-  fs.readFile("users.json", (err, data) => {
-    if(err) console.log(err);
-    let users = JSON.parse(data);
+  let foundUser = req.body._id;
 
-    let foundUser = users.find(({id}) => id == req.body.id);
- 
+  req.app.locals.db.collection("users").find({"id": foundUser}).toArray()
+  .then(result => {
+
     let user = {
-      "username": foundUser.username,
-      "firstname":foundUser.firstname, 
-      "lastname": foundUser.lastname, 
-      "email": foundUser.email,
-      "subscribe": foundUser.subscribe
-     };
+      "username": result[0].username,
+      "firstname":result[0].firstname, 
+      "lastname": result[0].lastname, 
+      "email": result[0].email,
+      "subscribe": result[0].subscribe,
+    };
 
     res.json(user);  
+
   });
+
 });
 
 
 
 //UPDATE SUBSCRIPTION
 router.post('/newsletter', function(req, res, next) {
-  console.log('req.body', req.body);
-  fs.readFile("users.json", (err, data) => {
-    if(err) console.log(err);
-    let users = JSON.parse(data);
+  console.log('req.body', req.body.subscribe);
+  let foundUser = req.body;
+  
+  req.app.locals.db.collection("users").find({"id": foundUser._id}).toArray()  
+  .then(result => {
+    console.log('result true?', result[0].subscribe);
+    if(result[0].subscribe != foundUser.subscribe){
+      console.log('so far');
+       if(foundUser.subscribe) {
+        console.log('should be true');
+        req.app.locals.db.collection("newsletter").insertOne({"email": result[0].email})
+       
+      } else {
+        console.log('should be false');
+        req.app.locals.db.collection("newsletter").find({"email": result[0].email}).toArray()  
+        .then(subscriber => {  
+          console.log("subscriber", subscriber[0]._id)
+        req.app.locals.db.collection("newsletter").findOneAndDelete({"_id": subscriber[0]._id})
+        });
 
-    let foundUser = users.find(({id}) => id == req.body.id);
-    
-    if(foundUser.subscribe != req.body.subscribe) {
-      foundUser.subscribe = req.body.subscribe;
+      }
+      //uppdate user list to subscribe.true
+      req.app.locals.db.collection("users").updateOne({"id": foundUser._id}, {$set:{"subscribe": foundUser.subscribe}})
 
-      fs.readFile("newsletter.json", (err, data) => {
-        if(err) console.log(err);
-         
-        let newsletter = JSON.parse(data); 
-          
-          if(foundUser.subscribe) {
-            newsletter.push(foundUser.email);
-            console.log("newsletter before push", newsletter)
-          } else {
-            let foundEmail = newsletter.find((newsletter) => newsletter == foundUser.email);
-            for( let email in newsletter) {
-              if (newsletter[email] === foundEmail) newsletter.splice(email, 1); 
-            }
-          }    
-          fs.writeFile("newsletter.json", JSON.stringify(newsletter, null, 2), (err) => {
-            if(err) console.log(err);
-          });
-      });
-     
-    }
-
-    fs.writeFile("users.json", JSON.stringify(users, null, 2), (err) => {
-      if(err) console.log(err);
-    });
-
+    };
     res.json(foundUser.subscribe);  
   });
+
+  
+  
 });
 
 module.exports = router;
