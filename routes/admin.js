@@ -13,6 +13,8 @@ const header = `
         <h1 id="logo">Administration</h1>
         <button id="logOut">Log Out</button>
     </section>
+    <div><a href="/admin/subscribers/">Show subscribers</a></div>
+    <div><a href="/admin/members/">Show members</a></div>
 </header>`;
 
 const checkLS = `if(!localStorage.getItem("AdminId")) {
@@ -70,8 +72,6 @@ router.post("/", (req, res) => {
             ${logOut}
             </script>
             
-            <div><a href="/admin/subscribers/">Show subscribers</a></div>
-            <div><a href="/admin/members/">Show members</a></div>
            `;
         
         
