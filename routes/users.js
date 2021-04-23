@@ -6,6 +6,9 @@ router.use(cors());
 const rand = require("random-key");
 const CryptoJS = require("crypto-js");
 //const ObjectID = require('mongodb').ObjectID;
+
+
+
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   res.send('respond with a resource');
@@ -46,38 +49,55 @@ router.post("/createAccount", (req, res) => {
   
   let randomId = rand.generateDigits(8);
   let findUser = req.body.username;
-
+//CHECK IF USERNAME ALLREADY EXISTS
   req.app.locals.db.collection("users").find({"username": findUser}).toArray()
   .then(result => {
-    console.log("result", result[0]) 
- 
-    if(result[0] == undefined){
-      console.log("sub", req.body.subscribe)
-      if(req.body.subscribe) {
-        req.app.locals.db.collection("newsletter").insertOne({"email": req.body.email})
-      }
 
+    if(result[0] == undefined || result[0].username == undefined){
+//IF DOES NOT EXIST => CHECK IF EMAIL ALLREADY EXISTS
+      req.app.locals.db.collection("users").find({"email": req.body.email}).toArray()
+      .then(result => {
+       
+        if(result[0] == undefined || result[0].email == undefined){
+        console.log("sub", result[0])
+           //IF DOES NOT EXIST => CHECK IF USER WANTS TO SUBSCRIBE
+          if(req.body.subscribe) {
+            req.app.locals.db.collection("newsletter").insertOne({"email": req.body.email})
+          }
 
-      let cryptPass = CryptoJS.AES.encrypt(req.body.password, "nyckel").toString();
+          let cryptPass = CryptoJS.AES.encrypt(req.body.password, "nyckel").toString();
 
-      let user = {
-        "username": req.body.username,
-        "firstname": req.body.firstname, 
-        "lastname": req.body.lastname, 
-        "email": req.body.email,
-        "password": cryptPass,
-        "subscribe": req.body.subscribe
-      };
-      console.log('user', user);
-      req.app.locals.db.collection("users").insertOne(user)
-      req.app.locals.db.collection("users").find({"username": req.body.username}).toArray()
-        .then(getId => {
-        console.log("i", getId[0]._id)
-        let currentUser = {username: req.body.username, id: getId[0]._id}
-        res.json(currentUser);
-      });  
+          let user = {
+            "username": req.body.username,
+            "firstname": req.body.firstname, 
+            "lastname": req.body.lastname, 
+            "email": req.body.email,
+            "password": cryptPass,
+            "subscribe": req.body.subscribe
+          };
+          // ADD USER TO REGISTER
+          req.app.locals.db.collection("users").insertOne(user)
+          // GET USER ID AND SENT TO CLIENT
+          req.app.locals.db.collection("users").find({"username": req.body.username}).toArray()
+          .then(getId => {
+            console.log("i", getId[0]._id)
+            let currentUser = {username: req.body.username, id: getId[0]._id}
+            res.json(currentUser);
+          });
 
-    };  
+        }else {
+          console.log('error email taken');
+          let error = "email is not available"
+          res.send(error);
+        }  
+    });
+        
+     
+    }else {
+      console.log('error usernamee taken');
+      let error = "username is not available"
+      res.send(error);
+    }  
   });
 });
 

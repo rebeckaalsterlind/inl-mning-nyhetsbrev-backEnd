@@ -32,55 +32,33 @@ router.get('/', function(req, res, next) {
 });
 
 
-
-// //SPARA I DB
-// router.post("/add", function(req, res) {
-//     req.app.locals.db.collection("users").insertOne(req.body)
-//     .then(result => {
-//         console.log(result)
-//         res.redirect("/show");
-//     })
-// })
-
-
-//HÄMTA FRÅN DB
-//let findUser = req.body.username ?? 
-
-
-// router.get("/", (req, res) => {
-  
-//     let printLinks = headstyle + `
-  
-//     <div><a href="/admin/subscribers/">Show subscribers</a></div>
-//     <div><a href="/admin/members/">Show members</a></div>`;
-
-//     res.send(printLinks);
-
-// });
-
-
+//
 router.post("/", (req, res) => {
     
     req.app.locals.db.collection("admin").find({"username": req.body.username}).toArray()
     .then(result => {
-    
+        console.log('RESULT', result);
+    if(result != "") {
         if(result[0].password === req.body.password){
             console.log('here');
-            let adminData = headstyle + `${header}
+            let adminData = headstyle + header + `
             <script>
-            localStorage.setItem('AdminId', JSON.stringify("${result[0]._id}"))
-            ${logOut}
-            </script>
-            
-           `;
-        
-        
+                localStorage.setItem('AdminId', JSON.stringify("${result[0]._id}"));
+                ${logOut}
+            </script>`;
+                
             res.send(adminData)
-
-        } else {
-            let error = `<div>fel inlogg eller lösen</div>`;
+        }
+    } else {
+            let error = `
+            <script>
+                window.location.replace("/")  
+                document.querySelectorAll("input").style.border = "1px solid red";
+            </script>`;p
             res.send(error)
         }
+       
+      
 
     });
 
@@ -140,93 +118,5 @@ router.get("/subscribers", (req, res) => {
 });
 
 
-
-
-// router.post("/members", (req, res) => {
-//     console.log('con daftest');
-//     res.send("print members")
-
-// });
-// router.post("/subscribers", (req, res) => {
-  
-//     res.send("print subscribers")
-
-// });
-
-router.get('/login', function(req, res, next) {
-    res.send('Username or password is not valid');
-});
-
-router.get('/noAccess', function(req, res, next) {
-    res.send('Username or password is not valid');
-});
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// router.post("/", (req, res) => {
-//     console.log('rew.boydy', req.body)
-    
-//     req.app.locals.db.collection("admin").find({"username": req.body.username}).toArray()
-//     .then(result => {
-//         if(result[0].password === req.body.password){
-//            req.app.locals.db.collection("users").find().toArray()
-//            .then( users => {
-//             let printLists = `<div><h2>All Members</h2>`
-//             for (let user in users)
-//                 printLists += `
-//                 <div>
-//                 <p>Username: ${users[user].username}</p> 
-//                 <p>Name: ${users[user].firstname} ${users[user].lastname}</p> 
-//                 <p>Email: ${users[user].email}</p> 
-//                 <p>Newsletter: ${(users[user].subscribe) ? "subscribing" : "not subscribing"}</p> 
-                
-//                 </div><br /><br />`;
-
-//                 printLists += `</div>`;
-
-//                 req.app.locals.db.collection("newsletter").find().toArray()
-//                 .then( subscribers => {
-                    
-//                     printLists += `<div><h2>Subscribers</h2>`
-
-//                     for (let subscriber in subscribers) {
-//                     printLists += `<p>${subscribers[subscriber].email}</p>`    
-//                     }
-
-//                     printLists += `</div>`;
-
-//                     res.send(printLists)
-//                 });
-//            });
-
-//         } else {
-//             res.send("username or password is invalid")
-//         }
- 
-//     })
-
-// });
-
-
-// router.get('/noAccess', function(req, res, next) {
-//     res.send('Username or password is not valid');
-//   });
-  
 
 module.exports = router;
