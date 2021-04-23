@@ -11,7 +11,7 @@ const headstyle = `<link rel="stylesheet" href="/stylesheets/style.css">`;
 const header = `
 <header>
     <section>
-    <a href="/"><h1 id="logo">Administration</h1></a>
+    <h1 id="logo">Administration</h1>
     </section> 
     <aside>
         <div>
