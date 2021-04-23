@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const fs = require("fs");
 const cors = require("cors");
+const { ESRCH } = require('constants');
 router.use(cors());
 // const rand = require("random-key");
 // var CryptoJS = require("crypto-js");
@@ -11,12 +12,17 @@ const header = `
 <header>
     <section>
         <h1 id="logo">Administration</h1>
-        <button id="logOut">Log Out</button>
-    </section>
-    <div><a href="/admin/subscribers/">Show subscribers</a></div>
-    <div><a href="/admin/members/">Show members</a></div>
+       
+    </section> 
+    <aside>
+        <div>
+            <button id="logOut">Log Out</button>
+        </div>
+        <a href="/admin/subscribers/">Show subscribers</a>
+        <a href="/admin/members/">Show members</a>
+    </aside>
 </header>`;
-
+const footer = `<footer><h6>Rebecka Alsterlind</h6></footer>`;
 const checkLS = `if(!localStorage.getItem("AdminId")) {
     window.location.replace("/admin/noAccess")
 };`;
@@ -45,20 +51,24 @@ router.post("/", (req, res) => {
             <script>
                 localStorage.setItem('AdminId', JSON.stringify("${result[0]._id}"));
                 ${logOut}
-            </script>`;
+            </script>` + footer;
                 
             res.send(adminData)
-        }
-    } else {
-            let error = `
+        } else {
+             let error = `
             <script>
-                window.location.replace("/")  
-                document.querySelectorAll("input").style.border = "1px solid red";
-            </script>`;p
+               alert("Username or password invalid")
+               window.location.replace("/")
+            </script>`;
             res.send(error)
         }
-       
-      
+    } else {
+        let error = `
+        <script>
+           window.location.replace("/")
+        </script>`;
+        res.send(error)
+    }
 
     });
 
@@ -74,19 +84,20 @@ router.get("/members", (req, res) => {
         <script>
             ${checkLS}${logOut}
         </script>
-        <div><h2>All Members</h2>`;
+        <section class="list-wrapper"><h3>All Members</h3><br />`;
       
         for (let user in users) {
             printMembers += `
             <div>
-            <p>Username: ${users[user].username}</p> 
-            <p>Name: ${users[user].firstname} ${users[user].lastname}</p> 
-            <p>Email: ${users[user].email}</p> 
-            <p>Newsletter: ${(users[user].subscribe) ? "subscribing" : "not subscribing"}</p> 
+                <h5>Member</h5>
+                <p>Username: ${users[user].username}</p> 
+                <p>Name: ${users[user].firstname} ${users[user].lastname}</p> 
+                <p>Email: ${users[user].email}</p> 
+                <p>Newsletter: ${(users[user].subscribe) ? "subscribing" : "not subscribing"}</p> 
             </div><br /><br />`;
         };
         
-        printMembers += `</div>`;
+        printMembers += `</section>` + footer;
 
     res.send(printMembers)
     });
@@ -102,16 +113,13 @@ router.get("/subscribers", (req, res) => {
     <script>
     ${checkLS}${logOut}
     </script>
-    <div><h2>All subscribers</h2>`;
+    <section class="list-wrapper"><h3>All subscribers</h3><br />`;
     
     for (let subs in subscribers) {
-        printSubs += `
-        <div>
-        <p>${subscribers[subs].email}</p> 
-        </div><br /><br />`;
+        printSubs += `<p>${subscribers[subs].email}</p>`;
     };
     
-    printSubs += `</div>`;
+    printSubs += `</section>` + footer;
 
     res.send(printSubs)
     });

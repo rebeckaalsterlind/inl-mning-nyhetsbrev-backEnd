@@ -86,17 +86,16 @@ router.post("/createAccount", (req, res) => {
           });
 
         }else {
-          console.log('error email taken');
-          let error = "email is not available"
-          res.send(error);
+          console.log("undefined email")
+          res.json("Email");
         }  
     });
         
      
     }else {
-      console.log('error usernamee taken');
-      let error = "username is not available"
-      res.send(error);
+      console.log("undefined username")
+   
+      res.json("Username");
     }  
   });
 });

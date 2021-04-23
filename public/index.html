@@ -3,24 +3,30 @@
 <head>
   <title>Express</title>
   <link rel="stylesheet" href="/stylesheets/style.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
   <header>
     <section>
       <h1 id="logo">Administration</h1>
-  </section>  
-  <form action="admin" method="post">
-      <div>
-        <input id="username" type="text" name="username" placeholder="Username" />
+  </section> 
+  <aside> 
+   <form action="admin" method="post">
+      <div id="inputField">
+        <input class="input" id="username" type="text" name="username" placeholder="Username" />
         <input id="password" type="password" name="password" placeholder="Password" />
-       <button type="submit">Send</button>
+       <button type="submit">Log In</button>
       </div>
-  </form>
+      <p id="error"></p>
+   </form>
+</aside>
 </header>
   <section>
     <h2>Log in to administraion</h2> 
   </section>
+<footer><h6>Rebecka Alsterlind</h6></footer>
 </body>
 
 </html>
