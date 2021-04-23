@@ -14,7 +14,7 @@ MongoClient.connect("mongodb+srv://alsterlind:8504143201@cluster0.bbnsj.mongodb.
     useUnifiedTopology: true
 })
 .then(client => {
-    console.log("Vi är uppkopplade mot databasen");
+    console.log("We are connected to the database!");
     const db = client.db("newsletter");
     app.locals.db = db; 
 });
@@ -30,6 +30,4 @@ app.use('/users', usersRouter);
 app.use('/admin', adminRouter);
 
 
-
-  
 module.exports = app;
