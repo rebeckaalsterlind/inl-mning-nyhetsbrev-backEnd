@@ -11,8 +11,7 @@ const headstyle = `<link rel="stylesheet" href="/stylesheets/style.css">`;
 const header = `
 <header>
     <section>
-    <a href="https://newsletter-with-mongo.herokuapp.com/admin"><h1 id="logo">Administration</h1></a>
-       
+    <a href="/"><h1 id="logo">Administration</h1></a>
     </section> 
     <aside>
         <div>
