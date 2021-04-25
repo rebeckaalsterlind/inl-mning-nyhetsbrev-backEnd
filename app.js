@@ -19,14 +19,6 @@ MongoClient.connect("mongodb+srv://alsterlind:8504143201@cluster0.bbnsj.mongodb.
     app.locals.db = db; 
 });
 
-// MongoClient.connect("mongodb:127.0.0.1:27017", {
-//     useUnifiedTopology: true
-// })
-// .then(client => {
-//     console.log("We are connected to the database!");
-//     const db = client.db("newsletter");
-//     app.locals.db = db; 
-// });
 
 app.use(logger('dev'));
 app.use(express.json());

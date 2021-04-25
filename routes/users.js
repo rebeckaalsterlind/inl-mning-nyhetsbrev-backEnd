@@ -25,7 +25,7 @@ router.post("/login", (req, res) => {
       }
 
     }else {
-      res.json("användare eller lösen stämmer inte");
+      res.json("Invalid");
     };
 
   });
