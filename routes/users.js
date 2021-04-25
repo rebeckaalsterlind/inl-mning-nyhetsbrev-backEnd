@@ -74,11 +74,11 @@ router.post("/createAccount", (req, res) => {
           });
 
         }else {
-          res.json("Email");
+          res.send("Email");
         };  
       });
     }else {
-      res.json("Username");
+      res.send("Username");
     };  
   });
 });
