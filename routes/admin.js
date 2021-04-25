@@ -8,19 +8,21 @@ router.use(cors());
 //TEMPLATES
 const headstyle = `<link rel="stylesheet" href="/stylesheets/style.css">`;
 
-const header = `
-<header>
-    <section>
-        <a href="/admin"><h1 id="logo">Administration</h1></a>
-    </section> 
-    <aside>
-        <div>
-            <button id="logOut">Log Out</button>
-        </div>
-        <a href="/admin/subscribers/">Show subscribers</a>
-        <a href="/admin/members/">Show members</a>
-    </aside>
-</header>`;
+let header = function(username) {
+    let printHeader = `<header>
+        <section>
+            <a href="/admin"><h1 id="logo">Administration</h1></a>
+        </section> 
+        <aside>
+            <div>${username}
+                <button id="logOut">Log Out</button>
+            </div>
+            <a href="/admin/subscribers/">Show subscribers</a>
+            <a href="/admin/members/">Show members</a>
+        </aside>
+    </header>`;
+    return printHeader
+}
 
 const footer = `<footer><h6>Rebecka Alsterlind</h6></footer>`;
 
@@ -44,12 +46,15 @@ router.post("/", (req, res) => {
         if(result != "") {
             //IF INCOMIN PASSWORD IS REG PASSWORD
             if(result[0].password === req.body.password){
-                
-                let adminData = headstyle + header + `
+      
+                let adminData = headstyle + header(req.body.username) + `
                 <script>
                     localStorage.setItem('AdminId', JSON.stringify("${result[0]._id}"));
                     ${logOut}
-                </script>` + footer;
+                </script>
+                <main class="flex">
+                    <h3>Welcome</h3>
+                </main>` + footer;
                     
                 res.send(adminData)
             //DETAILS ARE INVALID
@@ -68,8 +73,8 @@ router.post("/", (req, res) => {
 
 //GET LOGGED IN PAGE
 router.get('/', function(req, res, next) {
-   
-    let printSubs = headstyle + header + `
+    
+    let printSubs = headstyle + header("admin") + `
     <script>
         ${checkLS}
         ${logOut}
@@ -84,12 +89,13 @@ router.get('/', function(req, res, next) {
 
 
 //PRINT USERS
+
 router.get("/members", (req, res) => {
    
     req.app.locals.db.collection("users").find().toArray()
     .then( users => {
         
-        let printMembers = headstyle + header + `
+        let printMembers = headstyle + header("admin") + `
         <script>
             ${checkLS}${logOut}
         </script>
@@ -112,13 +118,16 @@ router.get("/members", (req, res) => {
     });
 });
 
+
+
+
 //PRINT SUBSCRIBERS
 router.get("/subscribers", (req, res) => {
    
     req.app.locals.db.collection("newsletter").find().toArray()
     .then( subscribers => {
         
-        let printSubs = headstyle + header + `
+        let printSubs = headstyle + header("admin") + `
         <script>
             ${checkLS}${logOut}
         </script>
@@ -134,15 +143,6 @@ router.get("/subscribers", (req, res) => {
     });
 });
 
-router.get('/noAccess', function(req, res, next) {
-   
-    let error = `
-    <main class="flex">
-        <h3>You do not have access</h3>
-    </main>`;
-
-    res.send(error)
-});
 
 
 module.exports = router;
