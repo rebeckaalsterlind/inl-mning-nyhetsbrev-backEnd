@@ -4,7 +4,7 @@ const fs = require("fs");
 const cors = require("cors");
 router.use(cors());
 const CryptoJS = require("crypto-js");
-
+var ObjectID=require('mongodb').ObjectID;
 
 
 //CHECK INCOMING LOGIN 
@@ -86,8 +86,9 @@ router.post("/createAccount", (req, res) => {
 
 //SEND USERS DETAILS FOR PRINT
 router.post('/myAccount/', function(req, res, next) {
-  req.app.locals.db.collection("users").find({"id": req.body.id}).toArray()
-  console.log("id", req.body.id)
+  console.log('req.', req.body.id);
+
+  req.app.locals.db.collection("users").find({"_id": ObjectID(req.body.id)}).toArray() 
   .then(result => {
 
     let user = {
@@ -112,7 +113,7 @@ router.post('/newsletter', function(req, res, next) {
   let foundUser = req.body;
   
   //FIND USER BY ID
-  req.app.locals.db.collection("users").find({"_id": foundUser.id}).toArray()  
+  req.app.locals.db.collection("users").find({"_id": ObjectID(req.body.id)}).toArray()  
   .then(result => {
     //IF IS NOT WHAT IS ALLREADY STORED
     if(result[0].subscribe != foundUser.subscribe){
@@ -123,11 +124,11 @@ router.post('/newsletter', function(req, res, next) {
       } else {
         req.app.locals.db.collection("newsletter").find({"email": result[0].email}).toArray()  
         .then(subscriber => {  
-          req.app.locals.db.collection("newsletter").findOneAndDelete({"_id": subscriber[0]._id})
+          req.app.locals.db.collection("newsletter").findOneAndDelete({"_id": ObjectID(subscriber[0]._id)})
         });
       };
       //UPPDATE USERLIST TO SUBSCRIBE TRUE/FALSE
-      req.app.locals.db.collection("users").updateOne({"id": foundUser.id}, {$set:{"subscribe": foundUser.subscribe}})
+      req.app.locals.db.collection("users").updateOne({"_id": ObjectID(foundUser.id)}, {$set:{"subscribe": foundUser.subscribe}})
 
     };
     res.json(foundUser.subscribe);  
