@@ -86,7 +86,7 @@ router.post("/createAccount", (req, res) => {
 
 //SEND USERS DETAILS FOR PRINT
 router.post('/myAccount/', function(req, res, next) {
-  req.app.locals.db.collection("users").find({"id": req.body.id}).toArray()
+  req.app.locals.db.collection("users").find({"_id": req.body.id}).toArray()
   console.log("id", req.body.id)
   .then(result => {
 
@@ -112,7 +112,7 @@ router.post('/newsletter', function(req, res, next) {
   let foundUser = req.body;
   
   //FIND USER BY ID
-  req.app.locals.db.collection("users").find({"id": foundUser._id}).toArray()  
+  req.app.locals.db.collection("users").find({"_id": foundUser.id}).toArray()  
   .then(result => {
     //IF IS NOT WHAT IS ALLREADY STORED
     if(result[0].subscribe != foundUser.subscribe){
@@ -127,7 +127,7 @@ router.post('/newsletter', function(req, res, next) {
         });
       };
       //UPPDATE USERLIST TO SUBSCRIBE TRUE/FALSE
-      req.app.locals.db.collection("users").updateOne({"id": foundUser._id}, {$set:{"subscribe": foundUser.subscribe}})
+      req.app.locals.db.collection("users").updateOne({"id": foundUser.id}, {$set:{"subscribe": foundUser.subscribe}})
 
     };
     res.json(foundUser.subscribe);  
