@@ -3,14 +3,15 @@ var router = express.Router();
 const fs = require("fs");
 const cors = require("cors");
 router.use(cors());
-// const rand = require("random-key");
-// var CryptoJS = require("crypto-js");
 
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
- res.render('index', { title: 'Express' });
-  
+router.get('/noAccess', function(req, res, next) {
+   
+    let error = `<h3>Log in to access to this page!</h3>`;
+
+    res.send(error)
 });
+
+
 
 module.exports = router;

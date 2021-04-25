@@ -11,7 +11,7 @@ const headstyle = `<link rel="stylesheet" href="/stylesheets/style.css">`;
 const header = `
 <header>
     <section>
-        <h1 id="logo">Administration</h1>
+        <a href="/admin"><h1 id="logo">Administration</h1></a>
     </section> 
     <aside>
         <div>
@@ -25,7 +25,7 @@ const header = `
 const footer = `<footer><h6>Rebecka Alsterlind</h6></footer>`;
 
 const checkLS = `if(!localStorage.getItem("AdminId")) {
-    window.location.replace("/admin/noAccess")
+    window.location.replace("/noAccess")
 };`;
 
 const logOut = `document.getElementById("logOut").addEventListener("click", () => {
@@ -33,10 +33,6 @@ const logOut = `document.getElementById("logOut").addEventListener("click", () =
     window.location.replace("/")
 });`
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-    res.send('respond from admin');
-});
 
 
 //CHECK LOGIN
@@ -58,25 +54,34 @@ router.post("/", (req, res) => {
                 res.send(adminData)
             //DETAILS ARE INVALID
             } else {
-                let error = `
-                <script>
-                    alert("Username or password invalid")
-                    window.location.replace("/")
-                </script>`;
-                res.send(error)
+                res.redirect("/")
             };
         //INPUT FIELDS ARE EMPTY    
         } else {
-            let error = `
-            <script>
-                window.location.replace("/")
-            </script>`;
-            res.send(error)
+            res.redirect("/")
         };
 
     });
 
 });
+
+
+//GET LOGGED IN PAGE
+router.get('/', function(req, res, next) {
+   
+    let printSubs = headstyle + header + `
+    <script>
+        ${checkLS}
+        ${logOut}
+    </script>
+    <main class="flex">
+        <h3>Welcome</h3>
+    </main>` + footer;
+
+    res.send(printSubs)
+});
+
+
 
 //PRINT USERS
 router.get("/members", (req, res) => {
@@ -88,16 +93,16 @@ router.get("/members", (req, res) => {
         <script>
             ${checkLS}${logOut}
         </script>
-        <section class="list-wrapper"><h3>Members</h3><br />`;
+        <section class="list-wrapper"><h3>Members.</h3><br />`;
       
         for (let user in users) {
             printMembers += `
             <div>
-                <h5>Member</h5>
-                <p>Username: ${users[user].username}</p> 
-                <p>Name: ${users[user].firstname} ${users[user].lastname}</p> 
-                <p>Email: ${users[user].email}</p> 
-                <p>Newsletter: ${(users[user].subscribe) ? "subscribing" : "not subscribing"}</p> 
+                <h4>Member</h4>
+                <p><span class="fontStyle" >Username:  </span>${users[user].username}</p> 
+                <p><span class="fontStyle" >Name: </span>${users[user].firstname} ${users[user].lastname}</p> 
+                <p><span class="fontStyle" >Email: </span>${users[user].email}</p> 
+                <p><span class="fontStyle" >Subscribing to newsletter: </span>${(users[user].subscribe) ? "Yes" : "No"}</p> 
             </div><br /><br />`;
         };
         
@@ -117,7 +122,7 @@ router.get("/subscribers", (req, res) => {
         <script>
             ${checkLS}${logOut}
         </script>
-        <section class="list-wrapper"><h3>Subscribers</h3><br />`;
+        <section class="list-wrapper"><h3>Subscribers.</h3><br />`;
         
         for (let subs in subscribers) {
             printSubs += `<p>${subscribers[subs].email}</p>`;
@@ -129,6 +134,15 @@ router.get("/subscribers", (req, res) => {
     });
 });
 
+router.get('/noAccess', function(req, res, next) {
+   
+    let error = `
+    <main class="flex">
+        <h3>You do not have access</h3>
+    </main>`;
+
+    res.send(error)
+});
 
 
 module.exports = router;

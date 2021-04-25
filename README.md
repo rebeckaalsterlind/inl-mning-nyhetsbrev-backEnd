@@ -8,14 +8,12 @@ nmp i - to install dependensies
 npm start - to start the project
 nodemon start - to start the server
 
-To open in browser:
+TO OPEN IN BROWSER:
 https://newsletter-with-mongo.herokuapp.com/
 
-Default user:
+DEFAULT USER:
 username: admin
 password: 12345
 
-To change to local database, install and start mongoDB
-In app.js => MongoClient.connect => change adress to "mongodb:127.0.0.1:27017"
 
 
