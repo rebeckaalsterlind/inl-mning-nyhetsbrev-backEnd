@@ -86,7 +86,6 @@ router.post("/createAccount", (req, res) => {
 
 //SEND USERS DETAILS FOR PRINT
 router.post('/myAccount/', function(req, res, next) {
-  console.log('req.', req.body.id);
 
   req.app.locals.db.collection("users").find({"_id": ObjectID(req.body.id)}).toArray() 
   .then(result => {
